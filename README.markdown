@@ -8,10 +8,10 @@ When you often switch between web browsers and can't due without those time-savi
 
 1. Add your favourite search engines to the keywords.json file
 2. Launch a Terminal and run the following command:
-    
-    python skeyword.py
+
+        python skeyword.py
 
 
-To choose an alternative port of keywords file see the help message:
+For more options see the help message:
 
     python skeyword.py --help
