@@ -1,0 +1,23 @@
+{
+    "keywords":{
+        "az":"http://www.amazon.com/exec/obidos/external-search?mode=blended&keyword=%s",
+        "azuk":"http://www.amazon.co.uk/s?ie=UTF8&keywords=%s&index=blended",
+        "cheat":"http://cheat.errtheblog.com/s/%s",
+        "fl":"http://flickr.com/search/?q=%s",
+        "g":"http://www.google.com/search?ie=UTF-8&oe=UTF-8&q=%s",
+        "gb":"http://books.google.com/books?q=%s&btnG=Search+Books",
+        "gc":"http://code.google.com/hosting/search?q=%s&projectsearch=Search+Projects",
+        "gd":"http://www.google.com/dictionary?langpair=en|en&q=%s&hl=en&aq=f",
+        "gf":"http://finance.google.com/finance?q=%s",
+        "gi":"http://images.google.com/images?ie=UTF-8&oe=UTF-8&safe=off&q=%s",
+        "gm":"http://maps.google.com/?q=%s",
+        "gv":"http://video.google.com/videosearch?q=Robert+%s",
+        "im":"http://imdb.com/find?s=all&q=%s&x=0&y=0",	
+        "pydoc":"http://www.google.com/search?&ie=UTF-8&oe=UTF-8&q=site:docs.python.org+%s",
+        "so":"http://stackoverflow.com/search?q=%s",
+        "sv":"http://serverfault.com/search?q=%s",
+        "wp":"http://en.wikipedia.org/w/wiki.phtml?search=%s&go=Go",
+        "yt":"http://youtube.com/results?search_query=%s&search=Search"
+    },
+    "default_search":"http://www.google.com/search?ie=UTF-8&oe=UTF-8&q=%s"
+}
