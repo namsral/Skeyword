@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
-commandline for GWEN - GateWay Email Node
+Skeyword - Unify keyword search among your web browsers
 '''
 
 from __future__ import with_statement
@@ -10,7 +10,7 @@ __author__ = "Lars Wiegman <lars@namsral.com>"
 __version__ = '0.2'
 __docformat__ = 'plaintext'
 __license__ = 'MIT'
-__copyright__ = "Copyright (c) 2009, Lars Wiegman"
+__copyright__ = "Copyright (c) 2011, Lars Wiegman"
 
 import os
 import sys
@@ -46,7 +46,7 @@ head = """<!DOCTYPE html>
         
 """
 
-footer = """
+tail = """
         </fieldset>
         <fieldset>
             <legend>Help</legend>
@@ -68,6 +68,10 @@ opensearchplugin = '''<?xml version="1.0" encoding="UTF-8"?>
 
 class HttpHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
+        
+        data = load_data(fname)
+        keywords, default_search = data['keywords'], data['default_search']
+
         if s.path[:4] == '/?q=' and len(s.path[4:]) > 0:
             s.send_response(301)
             p = urllib.unquote_plus(s.path[4:])
@@ -92,20 +96,25 @@ class HttpHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             for k, v in keywords.iteritems():
                 v = urlparse(v)[1]
                 content += '<li><span class="keyword">%s</span> <span class="url">%s</span></li>' % (k, v)
-            html = '%s<ul>%s</ul>%s' % (head, content, footer % {'port':port})
+            html = '%s<ul>%s</ul>%s' % (head, content, tail % {'port':port})
             s.wfile.write(html)
     def do_GET(s):
         s.do_HEAD()
 
     
 def load_data(fname):
+    '''Load a JSON file containing keywords and set the default_search
+       if it is not available. Returns a dictionary'''
     if os.access(fname, 4):
-        return json.load(open(fname, 'rb'))
+        data = json.load(open(fname, 'rb'))
+        if 'default_search' not in data:
+            default_search = 'http://www.google.com/search?ie=UTF-8&oe=UTF-8&q=%s'
+        return data
     else:
         print 'Couldn\'t access the keywords.json file'
         sys.exit(1)
 
-def run(port):
+def run():
     server_class = BaseHTTPServer.HTTPServer
     httpd = server_class((host, port), HttpHandler)
     print time.asctime(), "Server Starts - %s:%s" % (host, port)
@@ -118,15 +127,14 @@ def run(port):
 
 
 def main():
-    global keywords
+    global fname
     global port
     global host
-    global default_search
-    default_port = 9003
+
     host = 'localhost'
+    default_port = 9003
         
     parser = OptionParser(version="SKeyword %s" % __version__)
-    
     parser.add_option("-p", "--port", dest="port",
         help="port number, default %s" % default_port)
     parser.add_option("-k", "--keywords-file", dest="keywords_file",
@@ -134,26 +142,17 @@ def main():
     
     (options, args) = parser.parse_args()
     
-    #
     if options.keywords_file:
         fname = options.keywords_file
     else:
         fname = 'keywords.json'
-    
-    #
-    data = load_data(fname)
-    keywords = data['keywords']
-    if 'default_keyword' in data:
-        default_search = data['default_keyword']
-    else:
-        default_search = 'http://www.google.com/search?ie=UTF-8&oe=UTF-8&q=%s'
     
     if options.port and int(options.port) > 1:
         port = int(options.port)
     else:
         port = default_port
     
-    run(port)
+    run()
 
 if __name__ == '__main__':
     main()
