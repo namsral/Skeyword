@@ -4,8 +4,6 @@
 Skeyword - Unify keyword search among your web browsers
 '''
 
-from __future__ import with_statement
-
 __author__ = "Lars Wiegman <lars@namsral.com>"
 __version__ = '0.2'
 __docformat__ = 'plaintext'
@@ -21,32 +19,30 @@ from optparse import OptionParser
 import BaseHTTPServer
 from urlparse import urlparse
 
-head = """<!DOCTYPE html>
+head = '''<!DOCTYPE html>
     <html>
     <head>
         <meta charset="UTF-8" /> 
         <title>SKeyword</title>
-        <link rel="search" type="application/opensearchdescription+xml" title="localhost" href="/opensearch.xml">
+        <link rel="search" type="application/opensearchdescription+xml" title="Skeyword" href="/opensearch.xml">
         <style type="text/css">
             *{margin:0;padding:0}body{font-family:"Lucida Grande",verdana,sans-serif;font-size:12px;color:#888}#wrap{width:600px;margin:40px auto}fieldset{padding:10px 20px;background-color:#fefefe;border:1px solid #ddd;margin:20px 0}legend{font-size:1.2em;text-transform:uppercase;color:#bbb;padding:0 4px}ul{margin:0:padding:0}li{font-size:1em;list-style:none;float:left;margin:6px;color:#444;background-color:#eee;padding:2px 4px 2px 0}li span.keyword{background-color:#bbb;padding:2px 4px;font-weight:700}li span.url{color:#888}form{width:400px;margin:12px auto}input[type="text"]{width:400px;border:none;font-size:14px;color:#666;padding:6px 8px;margin-bottom:5px;background:#eee;width:260px;border-radius:4px}input[type="submit"]{background:#777;border:none;font-size:14px;font-weight:700;padding:4px 12px;color:#eee;border-radius:13px;margin-left:10px}
         </style>
     </head>
     <body onload="document.getElementById('q').focus();">
+        <div id="wrap">
+            <fieldset>
+                <legend>Search</legend>
+                <form method="get" action"/">
+                    <input type="text" name="q" id="q">
+                    <input type="submit" value="search">
+                </form>
+            </fieldset>
+            <fieldset>
+                <legend>Keywords</legend>
+'''
 
-    <div id="wrap">
-        <fieldset>
-            <legend>Search</legend>
-            <form method="get" action"/">
-                <input type="text" name="q" id="q">
-                <input type="submit" value="search">
-            </form>
-        </fieldset>
-        <fieldset>
-            <legend>Keywords</legend>
-        
-"""
-
-tail = """
+tail = '''
         </fieldset>
         <fieldset>
             <legend>Help</legend>
@@ -55,15 +51,14 @@ tail = """
         </fieldset>
     </div>
     </body>
-    </html>
-"""
+    </html>'''
 
 opensearchplugin = '''<?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:suggestions="http://www.opensearch.org/specifications/opensearch/extensions/suggestions/1.1">
-    <ShortName>localhost</ShortName>
-    <Description>localhost search engine</Description>
+    <ShortName>Skeyword</ShortName>
+    <Description>Skeyword search engine</Description>
     <InputEncoding>UTF-8</InputEncoding>
-    <Url type="text/html" method="GET" template="http://%s:%s/{searchTerms}"/>
+    <Url type="text/html" method="GET" template="http://%s:%s/?q={searchTerms}"/>
 </OpenSearchDescription>'''
 
 class HttpHandler(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -87,7 +82,6 @@ class HttpHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             s.send_header("Content-type", "application/opensearchdescription+xml")
             s.end_headers()
             s.wfile.write(opensearchplugin  % (host, port))
-        #elif (s.path == '/') or (s.path == '/help'):
         else:
             s.send_response(200)
             s.send_header("Content-type", "text/html")
