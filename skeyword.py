@@ -74,7 +74,7 @@ class HttpHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             if query_list[0] in keywords:
                 url = keywords.get(query_list[0]) % ' '.join(query_list[1:])
             else:
-                url = default_search % ' '.join(query_list)
+                url = default_search % '+'.join(query_list)
             s.send_header("Location", url)
             s.end_headers()
         elif (s.path == '/opensearch.xml'):
